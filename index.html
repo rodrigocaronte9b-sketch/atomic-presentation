@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Churn & CsOps Analysis | Atomic Group</title>
+    <meta name="description" content="Análise de Churn e CsOps — Padrões de cancelamento, KPIs e estratégia de implementação.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+
+    <!-- Floating Spheres Layer (Global) -->
+    <div class="spheres-container" id="spheresContainer"></div>
+
+    <!-- Navigation Bar -->
+    <nav id="mainNav">
+        <div class="logo">
+            <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/Atomic-group-white.webp" alt="Atomic Group Logo">
+        </div>
+        <div class="slide-indicators" id="slideIndicators">
+            <button class="indicator active" data-slide="0"><span>01</span></button>
+            <button class="indicator" data-slide="1"><span>02</span></button>
+            <button class="indicator" data-slide="2"><span>03</span></button>
+            <button class="indicator" data-slide="3"><span>04</span></button>
+            <button class="indicator" data-slide="4"><span>05</span></button>
+            <button class="indicator" data-slide="5"><span>06</span></button>
+        </div>
+        <div class="nav-arrows">
+            <button class="nav-arrow" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+            <button class="nav-arrow" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </nav>
+
+    <!-- Carousel Track -->
+    <div class="carousel-viewport" id="carouselViewport">
+        <div class="carousel-track" id="carouselTrack">
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- SLIDE 1 — Capa -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="slide slide-dark cover-slide" id="slide-0">
+                <div class="slide-bg-effects">
+                    <div class="nebula nebula-1"></div>
+                    <div class="nebula nebula-2"></div>
+                    <div class="star-field"></div>
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-sm pos-1 float-anim">
+                </div>
+                <div class="slide-inner">
+                    <div class="hero-layout cover-layout">
+                        <div class="hero-text">
+                            <p class="hero-tag"><i class="fas fa-atom"></i> Executive Presentation 2026</p>
+                            <h1>Churn and <span class="gradient-text">CsOps Analysis</span></h1>
+                            <p class="hero-sub">Diagnóstico de padrões de cancelamento, análise de dados operacionais e plano de implementação para otimização da jornada do cliente.</p>
+                            <div class="cover-meta-row">
+                                <div class="cover-badge"><i class="fas fa-database"></i> 1.739 registros analisados</div>
+                                <div class="cover-badge"><i class="fas fa-calendar-alt"></i> Base 2024–2025</div>
+                                <div class="cover-badge alert-badge"><i class="fas fa-exclamation-triangle"></i> Churn Precoce: 41.4%</div>
+                            </div>
+                            <div class="presenter-info prominent">
+                                <div class="presenter-photo rounded">
+                                    <img src="Rodrigo C.png" alt="Rodrigo Caronte">
+                                </div>
+                                <div class="presenter-text">
+                                    <span class="presenter-name">Rodrigo Caronte</span>
+                                    <span class="presenter-label">CSOps e Retention Specialist</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-visual cover-visual">
+                            <div class="astro-glow"></div>
+                            <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/astronauta-flutuando-no-espaco.webp" alt="Astronauta Flutuando" class="astro-img float-anim big-astro">
+                        </div>
+                    </div>
+                </div>
+                <svg class="wave-divider" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,80 1440,60 L1440,120 L0,120 Z" fill="#0d0d35"/>
+                </svg>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- SLIDE 2 — Panorama Real: O que temos vs. o que falta -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="slide slide-deep" id="slide-1">
+                <div class="slide-inner">
+                    <div class="split-layout gap-lg">
+                        <div class="split-content">
+                            <p class="section-tag">Diagnóstico Inicial</p>
+                            <h2>O que Temos vs.<br><span class="gradient-text">O que Falta</span></h2>
+                            <p class="section-desc-sm">Os dados atuais são o ponto de partida, mas cobrem apenas a superfície. Passe o mouse sobre cada item para entender o impacto real.</p>
+
+                            <div class="pattern-group">
+                                <div class="pattern-group-label available">
+                                    <i class="fas fa-check-circle"></i> Disponível — base sólida, mas limitada
+                                </div>
+                                <ul class="pattern-list compact">
+                                    <li class="done">
+                                        <span class="item-text">Dados de cancelamento</span>
+                                        <span class="info-pill ok">→ <span class="info-tooltip">Base histórica disponível. Permite entender <strong>quando</strong> e <strong>quantos</strong> cancelam — mas não o <em>porquê</em>. Ponto de partida, porém insuficiente para ação precisa.</span></span>
+                                    </li>
+                                    <li class="done">
+                                        <span class="item-text">Produto &amp; Categoria</span>
+                                        <span class="info-pill ok">→ <span class="info-tooltip">Segmentação por linha de produto mapeada. Sabemos <strong>o que</strong> foi cancelado — <mark>POWERZAP</mark> lidera com <strong>71.9%</strong> do volume — mas sem contexto de uso anterior.</span></span>
+                                    </li>
+                                    <li class="done">
+                                        <span class="item-text">MRR Realizado</span>
+                                        <span class="info-pill ok">→ <span class="info-tooltip">Receita rastreada. Levantamento essencial do <strong>MRR Localizado</strong> para identificar nichos insatisfeitos e comparar comportamentos com a base ativa, permitindo uma ação preventiva focada na saúde financeira.</span></span>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="pattern-group mt-16">
+                                <div class="pattern-group-label missing">
+                                    <i class="fas fa-times-circle"></i> Ausente — gaps críticos que geram especulação
+                                </div>
+                                <ul class="pattern-list compact">
+                                    <li class="missing">
+                                        <span class="item-text">Comportamento &amp; Engajamento</span>
+                                        <span class="info-pill critical">! <span class="info-tooltip"><strong>SPOF Operacional.</strong> Sem dados de engajamento, é impossível prever cancelamentos. Dos <mark>41.4%</mark> que saem em <strong>30 dias</strong>, não sabemos se estavam ativos ou inativos desde o início.</span></span>
+                                    </li>
+                                    <li class="missing">
+                                        <span class="item-text">Tentativas de retenção</span>
+                                        <span class="info-pill critical">! <span class="info-tooltip">Sem histórico de salvamento, não diferenciamos cancelamento por <strong>falha de produto</strong>, <strong>onboarding falho</strong> ou <strong>atendimento</strong>. O protocolo opera <em>às cegas</em>.</span></span>
+                                    </li>
+                                    <li class="missing">
+                                        <span class="item-text">LTV esperado por segmento</span>
+                                        <span class="info-pill critical">! <span class="info-tooltip">LTV médio atual: <mark>R$ 258,49</mark>. Sem projeção por segmento, não sabemos quanto investir para salvar <strong>Tech PME</strong> vs. <strong>Tech Enterprise</strong> — priorização é impossível.</span></span>
+                                    </li>
+                                    <li class="missing">
+                                        <span class="item-text">Feedback qualitativo (SPOF)</span>
+                                        <span class="info-pill critical">! <span class="info-tooltip"><strong>Ponto Único de Falha.</strong> Sem qualitativo correlacionado a <strong>negociação</strong>, <strong>implantação</strong> e <strong>pós-venda</strong>, todo diagnóstico é especulação. <em>Impossível criar solução sistêmica.</em></span></span>
+                                    </li>
+                                    <li class="missing">
+                                        <span class="item-text">Segmentação por nicho e porte</span>
+                                        <span class="info-pill critical">! <span class="info-tooltip">A solução para <strong>Tech PME</strong> é radicalmente diferente da <strong>Tech Enterprise</strong>. Tratar como base homogênea invalida qualquer protocolo — granularidade por <mark>segmento</mark> e <mark>faturamento</mark> é essencial.</span></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="split-visual radar-visual">
+                            <div class="radar-embed glass-light">
+                                <div class="radar-header">
+                                    <div class="radar-top-row">
+                                        <div class="radar-title-row">
+                                            <span class="radar-icon"><i class="fas fa-spider"></i></span>
+                                            <span class="radar-label">Churn Radar — Validado</span>
+                                            <span class="radar-badge">2 Dimensões</span>
+                                        </div>
+                                        <div class="radar-actions">
+                                            <button class="rdr-btn" onclick="radarSelectAll()">Todos</button>
+                                            <button class="rdr-btn alt" onclick="radarClearAll()">Limpar</button>
+                                        </div>
+                                    </div>
+                                    <div class="radar-note-box">
+                                        <i class="fas fa-info-circle"></i> Aproximação de cenário ideal baseada em filtros de porte e produto
+                                    </div>
+                                </div>
+                                <div class="radar-body">
+                                    <div class="radar-filters">
+                                        <div class="rf-section">
+                                            <div class="rf-label"><i class="fas fa-building"></i> Porte Estimado</div>
+                                            <div id="rdr-porte"></div>
+                                        </div>
+                                        <div class="rf-section">
+                                            <div class="rf-label"><i class="fas fa-box"></i> Produto Principal</div>
+                                            <div id="rdr-produto"></div>
+                                        </div>
+                                        <div class="radar-stats">
+                                            <div class="rs-item"><span class="rs-label">Clientes</span><span class="rs-val" id="rdr-total">—</span></div>
+                                            <div class="rs-item"><span class="rs-label">MRR Perdido</span><span class="rs-val danger" id="rdr-mrr">—</span></div>
+                                            <div class="rs-item"><span class="rs-label">Duração</span><span class="rs-val" id="rdr-dur">—</span></div>
+                                            <div class="rs-item"><span class="rs-label">Churn Precoce</span><span class="rs-val danger" id="rdr-early">—</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="radar-chart-wrap">
+                                        <canvas id="radarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-bg-effects">
+                    <div class="nebula nebula-5"></div>
+                    <div class="star-field"></div>
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-md pos-2 float-anim-slow">
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- SLIDE 3 — Dados: As 4 Descobertas Críticas -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="slide slide-darker" id="slide-2">
+                <div class="slide-inner">
+                    <div class="center-layout">
+                        <p class="section-tag">Análise de Dados</p>
+                        <h2>As <span class="gradient-text">4 Descobertas Críticas</span></h2>
+                        <p class="slide-subtitle">Cada dado aponta para um problema sistêmico, não isolado. O diagnóstico é claro: falha de implementação, não de mercado.</p>
+                        <div class="insights-grid-4">
+
+                            <div class="insight-card glass-white big">
+                                <div class="ins-top">
+                                    <span class="ins-tag critical-tag">🔴 ESTRATÉGICO</span>
+                                    <span class="ins-number-lg">DADOS</span>
+                                </div>
+                                <h3>Lacuna de Segmentação</h3>
+                                <p>A ausência de informações sobre <strong>nichos</strong> e <strong>porte</strong> impede um diagnóstico real. Sem esses dados, tratamos a base como homogênea, o que invalida qualquer protocolo de retenção.</p>
+                                <div class="insight-conclusion">
+                                    <i class="fas fa-lightbulb"></i> Sugestão: Enriquecimento via CNPJ/API
+                                </div>
+                            </div>
+
+                            <div class="insight-card glass-white big">
+                                <div class="ins-top">
+                                    <span class="ins-tag warn-tag">⚠️ PRODUTO</span>
+                                    <span class="ins-number-lg">71.9%</span>
+                                </div>
+                                <h3>Produto Crítico: POWERZAP</h3>
+                                <p>O POWERZAP concentra a vasta maioria dos cancelamentos. É urgente investigar se o problema é de <strong>percepção de valor</strong> ou de <strong>complexidade na adoção</strong>.</p>
+                                <div class="insight-conclusion">
+                                    <i class="fas fa-arrow-right"></i> Revisão de jornada do produto
+                                </div>
+                            </div>
+
+                            <div class="insight-card glass-white big">
+                                <div class="ins-top">
+                                    <span class="ins-tag critical-tag">🔴 OPERACIONAL</span>
+                                    <span class="ins-number-lg">PRIORIDADE</span>
+                                </div>
+                                <h3>Onboarding de Alta Performance</h3>
+                                <p>Otimização de prazos e processos com foco em <strong>proximidade</strong>. Definição de níveis de atenção por <strong>valor de contrato</strong> (Tiers) e foco total nos segmentos que mais drenam receita.</p>
+                                <div class="insight-conclusion">
+                                    <i class="fas fa-lightbulb"></i> Sugestão: Onboarding segmentado por Tier
+                                </div>
+                            </div>
+
+                            <div class="insight-card glass-white big">
+                                <div class="ins-top">
+                                    <span class="ins-tag critical-tag">🔴 FINANCEIRO</span>
+                                    <span class="ins-number-lg">MRR</span>
+                                </div>
+                                <h3>MRR Localizado: Diagnóstico Real</h3>
+                                <p>A análise do <strong>MRR por Segmento</strong> é o que separa a percepção da realidade. Sem mapear nichos e portes, perdemos a chance de entender quais perfis de clientes estão insatisfeitos antes que o churn ocorra.</p>
+                                <div class="insight-conclusion">
+                                    <i class="fas fa-arrow-right"></i> Comparação estratégica com a base ativa
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-bg-effects">
+                    <div class="nebula nebula-1"></div>
+                    <div class="star-field"></div>
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-lg pos-3 float-anim">
+                </div>
+                <svg class="wave-divider" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path d="M0,40 C180,100 360,10 540,60 C720,110 900,20 1080,70 C1260,120 1380,50 1440,40 L1440,120 L0,120 Z" fill="#0a0a28"/>
+                </svg>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- SLIDE 4 — KPIs: O que os números confirmam -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="slide slide-accent" id="slide-3">
+                <div class="slide-bg-effects">
+                    <div class="star-field"></div>
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-featured float-anim">
+                </div>
+                <div class="slide-inner">
+                    <div class="split-layout gap-lg">
+                        <div class="split-content">
+                            <p class="section-tag">Validação por KPIs</p>
+                            <h2>Os Números <span class="gradient-text">Confirmam</span></h2>
+                            <p class="section-desc-sm">Os KPIs abaixo convergem para a mesma conclusão: o problema é operacional, concentrado e precoce. Passe o mouse para mais contexto.</p>
+
+                            <div class="kpi-cards">
+                                <div class="kpi-card glass-white">
+                                    <div class="kpi-val critical-val">ZERO</div>
+                                    <div class="kpi-name">Engajamento &amp; Comportamento</div>
+                                    <div class="kpi-context">Inexistência de Tracking</div>
+                                    <div class="info-tooltip">A ausência de tracking impede antecipar o risco. Com dados de uso, podemos <mark>reduzir o churn precoce em 15%</mark> através de ações preventivas e alertas de inatividade.</div>
+                                </div>
+                                <div class="kpi-card glass-white">
+                                    <div class="kpi-val warn-val">SPOF</div>
+                                    <div class="kpi-name">Feedback Qualitativo</div>
+                                    <div class="kpi-context">Ponto Único de Falha</div>
+                                    <div class="info-tooltip">Operar sem qualitativo é um <mark>Ponto Único de Falha</mark>. Mapear o 'porquê' permite <strong>otimizar a jornada em 20%</strong>, corrigindo gargalos sistêmicos de adoção.</div>
+                                </div>
+                                <div class="kpi-card glass-white">
+                                    <div class="kpi-val warn-val">AUSENTE</div>
+                                    <div class="kpi-name">Tentativas de Retenção</div>
+                                    <div class="kpi-context">Histórico Desconhecido</div>
+                                    <div class="info-tooltip">Diferenciar produto vs. atendimento é vital. Protocolos baseados em dados podem <mark>salvar 25% dos pedidos</mark> de cancelamento voluntário através de ofertas precisas.</div>
+                                </div>
+                                <div class="kpi-card glass-white">
+                                    <div class="kpi-val critical-val">CRÍTICO</div>
+                                    <div class="kpi-name">Nicho e Porte</div>
+                                    <div class="kpi-context">Segmentação Indefinida</div>
+                                    <div class="info-tooltip">Tratar a base de forma homogênea é ineficiente. A segmentação estratégica pode <strong>elevar o LTV Enterprise em até 30%</strong> via atendimento prioritário.</div>
+                                </div>
+                            </div>
+
+                            <div class="kpi-conclusion glass-white">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <p><strong>Gap Sistêmico:</strong> A falta desses 5 pontos gera um cenário de especulação operacional. Precisamos migrar da "intuição" para a "decisão baseada em dados" em cada etapa da jornada.</p>
+                            </div>
+                        </div>
+
+                        <div class="split-visual">
+                            <div class="reason-panel glass-white">
+                                <div class="reason-header">
+                                    <h4>Fatos Críticos da Base</h4>
+                                    <span class="reason-note">⚠ Extraído de 1.742 cancelamentos</span>
+                                </div>
+
+                                <div class="fact-grid">
+                                    <div class="fact-card">
+                                        <div class="fact-val critical-val">4 em 10</div>
+                                        <div class="fact-title">Churn Precoce</div>
+                                        <div class="fact-desc">Clientes cancelam no primeiro mês.</div>
+                                    </div>
+                                    <div class="fact-card">
+                                        <div class="fact-val warn-val">Maioria</div>
+                                        <div class="fact-title">Saída Voluntária</div>
+                                        <div class="fact-desc">Solicitam a saída. <strong>Ação:</strong> Avaliar os motivos reais a fundo.</div>
+                                    </div>
+                                    <div class="fact-card">
+                                        <div class="fact-val warn-val">~40%</div>
+                                        <div class="fact-title">Problema de Pagamento</div>
+                                        <div class="fact-desc">Inacertivo quanto à motivação e detalhes de tentativas de retenção.</div>
+                                    </div>
+                                    <div class="fact-card">
+                                        <div class="fact-val purple-val">1253</div>
+                                        <div class="fact-title">São POWERZAP</div>
+                                        <div class="fact-desc"><strong>Ação:</strong> Reavaliação de investimento, melhoria de UX ou revisão processual de negócio.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slide-bg-effects">
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-sm pos-4 float-anim-slow">
+                </div>
+                <svg class="wave-divider wave-flip" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                    <path d="M0,60 C360,0 720,100 1080,40 C1260,10 1380,70 1440,60 L1440,120 L0,120 Z" fill="#060620"/>
+                </svg>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- SLIDE 5 — Dados Necessários & Plano de Ação -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="slide slide-deepest" id="slide-4">
+                <div class="slide-bg-effects">
+                    <div class="nebula nebula-2"></div>
+                    <div class="star-field"></div>
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-md pos-2 float-anim">
+                </div>
+                <div class="slide-inner">
+                    <div class="split-layout gap-lg">
+                        <div class="split-content">
+                            <p class="section-tag">Next Steps</p>
+                            <h2>Dados Necessários &amp;<br><span class="gradient-text">Plano de Ação</span></h2>
+                            <p class="section-desc-sm">Para uma análise precisa e protocolos maduros de retenção, os dados abaixo são essenciais. Passe o mouse para entender o impacto de cada um.</p>
+
+                            <div class="ess-list">
+                                <div class="ess-row glass-white">
+                                    <div class="ess-icon"><i class="fas fa-signal"></i></div>
+                                    <div class="ess-body">
+                                        <strong>Sinal de uso / Engagement</strong>
+                                        <span>Identificar clientes em risco antes do cancelamento</span>
+                                    </div>
+                                    <div class="ess-impact high">Alto impacto</div>
+                                    <div class="info-tooltip">Analisar <strong>logins</strong>, <strong>uso de features</strong> e <strong>frequência</strong> ao longo do tempo. Permite antecipar cancelamentos antes que aconteçam e correlacionar <mark>inatividade</mark> com <em>risco crítico</em> de churn.</div>
+                                </div>
+                                <div class="ess-row glass-white">
+                                    <div class="ess-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                    <div class="ess-body">
+                                        <strong>Score de Risco (0–100)</strong>
+                                        <span>Priorizar esforço de retenção com critério objetivo</span>
+                                    </div>
+                                    <div class="ess-impact high">Alto impacto</div>
+                                    <div class="info-tooltip">Score de <mark>0 a 100</mark> baseado em uso, histórico de pagamentos e engajamento. Permite priorizar ações de retenção de forma objetiva e alocar esforço onde há <strong>maior retorno potencial</strong>.</div>
+                                </div>
+                                <div class="ess-row glass-white">
+                                    <div class="ess-icon"><i class="fas fa-history"></i></div>
+                                    <div class="ess-body">
+                                        <strong>Histórico de Retenção</strong>
+                                        <span>Criar protocolos maduros com base em tentativas anteriores</span>
+                                    </div>
+                                    <div class="ess-impact medium">Médio prazo</div>
+                                    <div class="info-tooltip">Registro estruturado de todas as <strong>tentativas de retenção</strong>: quem abordou, quando, com qual argumento e resultado. Cria base para <em>protocolos maduros</em> e planejamento de mitigação.</div>
+                                </div>
+                                <div class="ess-row glass-white">
+                                    <div class="ess-icon"><i class="fas fa-hourglass-half"></i></div>
+                                    <div class="ess-body">
+                                        <strong>Intervalo Ótimo para Agir</strong>
+                                        <span>Otimizar o timing das intervenções de salvamento</span>
+                                    </div>
+                                    <div class="ess-impact medium">Médio prazo</div>
+                                    <div class="info-tooltip">Definir em qual momento do ciclo de vida a intervenção tem maior chance de sucesso. O <mark>timing é crítico</mark> — agir tarde demais é <em>desperdiçar esforço</em> e receita.</div>
+                                </div>
+                                <div class="ess-row glass-white">
+                                    <div class="ess-icon"><i class="fas fa-user-graduate"></i></div>
+                                    <div class="ess-body">
+                                        <strong>Onboarding &amp; Treinamentos</strong>
+                                        <span>Escala periódica de acompanhamento incisivo</span>
+                                    </div>
+                                    <div class="ess-impact high">Alto impacto</div>
+                                    <div class="info-tooltip">Implementar protocolos de <strong>Onboarding High-Touch</strong> e treinamentos recorrentes para garantir que o cliente perceba valor rapidamente, reduzindo o churn precoce.</div>
+                                </div>
+                                <div class="ess-row glass-white">
+                                    <div class="ess-icon"><i class="fas fa-project-diagram"></i></div>
+                                    <div class="ess-body">
+                                        <strong>Cohort Curves (2 anos)</strong>
+                                        <span>Entender a curva de uso e retenção ao longo do tempo</span>
+                                    </div>
+                                    <div class="ess-impact medium">Análise contínua</div>
+                                    <div class="info-tooltip">Gráfico contínuo de uso ao longo de <mark>2 anos</mark>, correlacionado com retenção e adoção de features. Permite visualizar onde a <strong>curva de valor</strong> cai e onde intervenções foram efetivas.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="split-visual action-col">
+                            <div class="action-card glass-white">
+                                <div class="action-icon-wrap"><i class="fas fa-search-plus"></i></div>
+                                <h4>Visão Granular</h4>
+                                <p>Cada cliente tem motivações particulares. Sem granularidade de contexto — segmento, porte, histórico de uso e jornada de negociação — tendemos a generalizar a base e criar protocolos que não resolvem nenhum problema específico.</p>
+                            </div>
+
+                            <div class="action-card glass-white">
+                                <div class="action-icon-wrap teal"><i class="fas fa-tools"></i></div>
+                                <h4>Otimização Operacional</h4>
+                                <p>O churn não é apenas perda de receita — é um <strong>indicador de oportunidade de maturidade do negócio</strong>. Com dados corretos, é possível corrigir gaps de onboarding, estruturar cadências de retenção proativa e amadurecer o processo como um todo.</p>
+                            </div>
+
+                            <div class="quote-final glass-white">
+                                <i class="fas fa-quote-left"></i>
+                                <p>"O indivíduo que não conhece a própria história está condenado a repeti-la."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ═══════════════════════════════════════════════ -->
+            <!-- SLIDE 6 — Encerramento Minimalista -->
+            <!-- ═══════════════════════════════════════════════ -->
+            <section class="slide slide-final" id="slide-5">
+                <div class="slide-bg-effects">
+                    <div class="nebula nebula-3"></div>
+                    <div class="star-field"></div>
+                    <img src="https://atomicgroup.com.br/wp-content/uploads/2024/12/modelo-lua-tridimensional-jpg.webp" class="floating-moon moon-xl pos-4 float-anim-slow">
+                </div>
+                <div class="slide-inner">
+                    <div class="center-layout" style="text-align: center;">
+                        <img src="ChatGPT Image 4 de mai. de 2026, 16_01_31.png" alt="Atomic Hero" style="max-width: 380px; margin: 0 auto 30px; filter: drop-shadow(0 20px 40px rgba(156,81,224,0.3)); transform: translateY(-10px); animation: float-anim-slow 8s ease-in-out infinite;">
+                        <h2>Muito <span class="gradient-text">Obrigado!</span></h2>
+                        <p class="hero-sub" style="margin-bottom: 40px;">Estamos à disposição para aprofundar o diagnóstico e alinhar os próximos passos da implementação.</p>
+                        
+                        <a href="https://wa.me/5585985689262" target="_blank" class="cta-wpp glass-white" style="display: inline-flex; align-items: center; justify-content: center; gap: 15px; background: rgba(255,255,255,0.05); padding: 15px 30px; border-radius: 50px; border: 1px solid rgba(255,255,255,0.1); transition: var(--smooth); color: #fff; text-decoration: none; margin: 0 auto;">
+                            <div class="cta-wpp-icon" style="font-size: 2rem; color: #25D366;">
+                                <i class="fab fa-whatsapp"></i>
+                            </div>
+                            <div class="cta-wpp-text" style="text-align: left;">
+                                <span class="cta-title" style="display: block; font-weight: 700; font-size: 1.1rem;">Falar com Consultor</span>
+                                <span class="cta-desc" style="display: block; font-size: 0.85rem; color: rgba(255,255,255,0.7);">+55 85 98568-9262</span>
+                            </div>
+                            <div class="cta-wpp-arrow" style="margin-left: 10px;">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </div><!-- /carousel-track -->
+    </div><!-- /carousel-viewport -->
+
+    <!-- Scroll Progress -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Keyboard Hint -->
+    <div class="keyboard-hint" id="keyboardHint">
+        <span><i class="fas fa-arrows-left-right"></i> Use as setas ou arraste para navegar</span>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+    /* ── CHURN RADAR — Integrado ao Slide 2 — 2 Dimensões (Porte + Produto) ── */
+    const rdrData = {
+        porte: [
+            {name:'SMB/Padrão',          clients:1613, mrr:108160.18, duration:3.74, early:41.6, data:[92.6,67,37,42,92]},
+            {name:'Médio/Grande Porte',  clients:109,  mrr:7555.30,   duration:4.88, early:34.9, data:[6.3,69,49,35,6]},
+            {name:'Com Domínio Próprio', clients:20,   mrr:1763.82,   duration:3.05, early:55.0, data:[1.1,88,31,55,2]}
+        ],
+        produto: [
+            {name:'POWERZAP',     clients:1253, mrr:82407.94,  duration:3.68, early:43.0, data:[71.9,66,37,43,70]},
+            {name:'POWERBOT',     clients:486,  mrr:34744.36,  duration:4.15, early:38.0, data:[27.9,71,42,38,30]},
+            {name:'ATOMIC AGENT', clients:3,    mrr:327.00,    duration:2.00, early:50.0, data:[0.2,109,20,50,0.3]}
+        ]
+    };
+    const rdrColors = ['#9C51E0','#00C2CB','#F9A825','#ef4444','#60a5fa','#34d399'];
+    let rdrChart = null;
+    let rdrSelected = {
+        porte:['SMB/Padrão'],
+        produto:['POWERZAP']
+    };
+
+    function rdrRenderGrids() {
+        // Build a global color index that mirrors rdrUpdateChart() ordering
+        let colorMap = {};
+        let ci = 0;
+        ['porte','produto'].forEach(dim => {
+            rdrData[dim].forEach(item => {
+                colorMap[dim + ':' + item.name] = rdrColors[ci % rdrColors.length];
+                ci++;
+            });
+        });
+
+        ['porte','produto'].forEach(dim => {
+            const el = document.getElementById('rdr-'+dim);
+            if (!el) return;
+            el.innerHTML = '';
+            rdrData[dim].forEach((item) => {
+                const on = rdrSelected[dim].includes(item.name);
+                const itemColor = colorMap[dim + ':' + item.name];
+                const d = document.createElement('div');
+                d.className = 'rdr-check' + (on ? ' on' : '');
+                // Inject actual chart color into the dot for visual legend matching
+                d.innerHTML = `<span class="rdr-dot" style="${on ? `background:${itemColor};border-color:${itemColor};box-shadow:0 0 6px ${itemColor}55` : `border-color:${itemColor}88`}"></span><span class="rdr-name">${item.name}</span><span class="rdr-count">${item.clients}</span>`;
+                d.onclick = () => rdrToggle(dim, item.name);
+                el.appendChild(d);
+            });
+        });
+    }
+
+    function rdrToggle(dim, name) {
+        const i = rdrSelected[dim].indexOf(name);
+        if (i > -1) { rdrSelected[dim].splice(i,1); }
+        else { rdrSelected[dim].push(name); }
+        if (rdrSelected[dim].length === 0) rdrSelected[dim] = [rdrData[dim][0].name];
+        rdrRenderGrids(); rdrUpdateChart(); rdrUpdateStats();
+    }
+
+    function radarSelectAll() {
+        Object.keys(rdrData).forEach(d => rdrSelected[d] = rdrData[d].map(i=>i.name));
+        rdrRenderGrids(); rdrUpdateChart(); rdrUpdateStats();
+    }
+    function radarClearAll() {
+        Object.keys(rdrData).forEach(d => rdrSelected[d] = [rdrData[d][0].name]);
+        rdrRenderGrids(); rdrUpdateChart(); rdrUpdateStats();
+    }
+
+    function rdrUpdateChart() {
+        const canvas = document.getElementById('radarChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const labels = ['Volume','MRR Médio','Duração','Churn Precoce','Concentração'];
+        let datasets = []; let ci = 0;
+        Object.keys(rdrData).forEach(dim => {
+            rdrSelected[dim].forEach(name => {
+                const item = rdrData[dim].find(i=>i.name===name);
+                if (!item) return;
+                const c = rdrColors[ci % rdrColors.length];
+                datasets.push({
+                    label: item.name, data: item.data,
+                    borderColor: c, backgroundColor: c+'25',
+                    borderWidth: 3, pointRadius: 5, pointBackgroundColor: c, fill: true
+                });
+                ci++;
+            });
+        });
+        datasets.push({
+            label:'Baseline', data:[50,67,40,40,50],
+            borderColor:'rgba(255,255,255,0.25)', backgroundColor:'transparent',
+            borderWidth:1.5, borderDash:[5,5], pointRadius:0, fill:false
+        });
+        if (rdrChart) rdrChart.destroy();
+        rdrChart = new Chart(ctx, {
+            type: 'radar', data: { labels, datasets },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    r: {
+                        min:0, max:100,
+                        ticks: { color:'rgba(255,255,255,0.4)', backdropColor:'transparent', font:{size:11, weight:'500'} },
+                        grid: { color:'rgba(255,255,255,0.09)' },
+                        angleLines: { color:'rgba(255,255,255,0.09)' },
+                        pointLabels: { color:'rgba(255,255,255,0.85)', font:{size:13, weight:'700'} }
+                    }
+                }
+            }
+        });
+    }
+
+    function rdrUpdateStats() {
+        let tc=0, tm=0, sd=0, se=0, n=0;
+        Object.keys(rdrData).forEach(dim => {
+            rdrSelected[dim].forEach(name => {
+                const item = rdrData[dim].find(i=>i.name===name);
+                if (!item) return;
+                tc+=item.clients; tm+=item.mrr; sd+=item.duration; se+=item.early; n++;
+            });
+        });
+        if (!n) return;
+        const avg = v => Math.round(v/n);
+        document.getElementById('rdr-total').textContent  = avg(tc).toLocaleString('pt-BR');
+        document.getElementById('rdr-mrr').textContent    = 'R$\u00a0' + Math.round(tm/n).toLocaleString('pt-BR');
+        document.getElementById('rdr-dur').textContent    = (sd/n).toFixed(2)+' m';
+        document.getElementById('rdr-early').textContent  = (se/n).toFixed(1)+'%';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        rdrRenderGrids(); rdrUpdateChart(); rdrUpdateStats();
+    });
+    </script>
+</body>
+</html>
